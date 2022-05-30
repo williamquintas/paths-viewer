@@ -13,20 +13,21 @@ import {
 } from "@mui/material";
 import Papa from "papaparse";
 import { ChangeEvent, FunctionComponent } from "react";
-import { Link } from "react-router-dom";
-import { IFile } from "../App/App";
+import { useAppDispatch, useAppSelector } from "../../config/hooks";
+import {
+  add,
+  changeColor,
+  remove,
+  selectFiles,
+} from "../../features/files/slice";
 import ColorPicker, { Colors } from "../ColorPicker/ColorPicker";
 import FileUploadButton from "../FileUploadButton/FileUploadButton";
-import "./FilesSelectionContainer.css";
+import Link from "../Link/Link";
 
-interface FilesSelectionContainerProps {
-  files: IFile[];
-  setFiles: (files: IFile[]) => void;
-}
+const FilesSelectionContainer: FunctionComponent = () => {
+  const dispatch = useAppDispatch();
+  const files = useAppSelector(selectFiles);
 
-const FilesSelectionContainer: FunctionComponent<
-  FilesSelectionContainerProps
-> = ({ files, setFiles }) => {
   const getRandomColor = (): string => {
     const colors = Object.keys(Colors);
     const index = Math.floor(Math.random() * colors.length) + 1;
@@ -40,13 +41,13 @@ const FilesSelectionContainer: FunctionComponent<
       header: true,
       skipEmptyLines: true,
       complete: ({ data }) => {
-        const filesList = [...files];
-        filesList.push({
-          filename: file.name,
-          color: getRandomColor(),
-          data,
-        });
-        setFiles(filesList);
+        dispatch(
+          add({
+            filename: file.name,
+            color: getRandomColor(),
+            data,
+          })
+        );
       },
       error: (error) => console.error(error),
     });
@@ -68,9 +69,7 @@ const FilesSelectionContainer: FunctionComponent<
   };
 
   const onRemoveFile = (index: number) => {
-    const filesList = [...files];
-    filesList.splice(index, 1);
-    setFiles(filesList);
+    dispatch(remove(index));
   };
 
   const onChangeColor = (index: number, evt: SelectChangeEvent) => {
@@ -80,9 +79,7 @@ const FilesSelectionContainer: FunctionComponent<
       return;
     }
 
-    const filesList = [...files];
-    filesList[index].color = selectedColor;
-    setFiles(filesList);
+    dispatch(changeColor({ index, color: selectedColor }));
   };
 
   return (
@@ -100,7 +97,7 @@ const FilesSelectionContainer: FunctionComponent<
             />
           )}
           {files.length > 0 && (
-            <Link to="/map">
+            <Link href="/map">
               <Button variant="contained" size="small" endIcon={<Send />}>
                 {" "}
                 View paths on map{" "}

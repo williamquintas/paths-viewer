@@ -8,22 +8,20 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import { useRouter } from "next/router";
 import { FunctionComponent, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { IFile } from "../../components/App/App";
-import CoordinatesList from "../../components/CoordinatesList/CoordinatesList";
-import Map from "../../components/Map/Map";
+import CoordinatesList from "../components/CoordinatesList/CoordinatesList";
+import Map from "../components/Map/Map";
+import { useAppSelector } from "../config/hooks";
+import { selectFiles } from "../features/files/slice";
 
-interface MapViewerPageProps {
-  files: IFile[];
-}
-
-const MapViewerPage: FunctionComponent<MapViewerPageProps> = ({ files }) => {
-  const navigate = useNavigate();
+const MapViewerPage: FunctionComponent = () => {
+  const router = useRouter();
+  const files = useAppSelector(selectFiles);
 
   useEffect(() => {
     if (!files || files.length === 0) {
-      navigate("/");
+      router.back();
     }
   }, [files]);
 
@@ -31,7 +29,7 @@ const MapViewerPage: FunctionComponent<MapViewerPageProps> = ({ files }) => {
     <Container component="main" maxWidth="lg">
       <Paper sx={{ my: 2, p: 1 }}>
         <Stack direction="row" spacing={1} alignItems="center">
-          <IconButton aria-label="go-back" onClick={() => navigate(-1)}>
+          <IconButton aria-label="go-back" onClick={() => router.back()}>
             <ArrowBack />
           </IconButton>
           <Typography component="h1" variant="h1" align="center">
