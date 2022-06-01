@@ -1,8 +1,8 @@
 import { FunctionComponent } from "react";
-import FilesSelectionContainer from "../components/FilesSelectionContainer/FilesSelectionContainer";
+import ModeSelector from "../components/ModeSelector/ModeSelector";
 
-const FilesSelectionPage: FunctionComponent = () => {
-  return <FilesSelectionContainer />;
+const IndexPage: FunctionComponent = () => {
+  return <ModeSelector />;
 };
 
-export default FilesSelectionPage;
+export default IndexPage;
