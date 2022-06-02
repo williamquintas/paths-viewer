@@ -1,14 +1,18 @@
 import { Button, Container, Paper, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import { Fragment, FunctionComponent } from "react";
+import { useAppDispatch } from "../../config/hooks";
+import { createSession } from "../../features/sessions/slice";
 import SessionService from "../../services/SessionService";
 import Link from "../Link/Link";
 
 const ModeSelector: FunctionComponent = () => {
+  const dispatch = useAppDispatch();
   const router = useRouter();
 
-  const createSession = async () => {
+  const handleDynamicButtonClick = async () => {
     const id = await SessionService.create();
+    dispatch(createSession(id));
     router.push(`/dynamic?sessionId=${id}`);
   };
 
@@ -27,7 +31,7 @@ const ModeSelector: FunctionComponent = () => {
           />
           <ModeCard
             href="/dynamic"
-            onButtonClick={createSession}
+            onButtonClick={handleDynamicButtonClick}
             buttonText="Dynamic"
             description="A session will begin and you can send coordinates via API to display on map."
           />
