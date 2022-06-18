@@ -1,0 +1,10 @@
+.color-picker div {
+  display: flex !important;
+}
+
+.color-circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 6px;
+  margin-right: 8px;
+}
