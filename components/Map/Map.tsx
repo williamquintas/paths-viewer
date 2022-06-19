@@ -15,6 +15,7 @@ const MapWrapper: FunctionComponent<MapWrapperProps> = ({
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map>();
+  const [polylines, setPolylines] = useState<google.maps.Polyline[]>([]);
 
   useEffect(() => {
     if (ref.current && !map) {
@@ -41,6 +42,9 @@ const MapWrapper: FunctionComponent<MapWrapperProps> = ({
   }, [center]);
 
   useEffect(() => {
+    polylines.forEach((polyline) => polyline.setMap(null));
+    setPolylines([]);
+
     entities?.forEach(({ coordinates, color }) => {
       new google.maps.Polyline({
         geodesic: true,
